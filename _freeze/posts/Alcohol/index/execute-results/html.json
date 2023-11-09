@@ -1,0 +1,16 @@
+{
+  "hash": "da145eed0defbdb123109203a4e3b447",
+  "result": {
+    "markdown": "---\ntitle: \"Alcohol Analysis\"\nauthor: \"Aarthi Shivkumar\"\ndate: \"2023-11-08\"\ncategories: [alcohol, analysis]\nimage: \"image.jpg\"\n---\n\n\nI chose to analyze an alcohol consumption dataset in underage secondary school students from Kaggle : https://www.kaggle.com/datasets/uciml/student-alcohol-consumption. This is as I find that underage drinking is becoming increasingly common and this is rather concerning, so I wanted to further analyze data relating to underage drinking.\n\nFirst, I imported the dataset:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(dplyr)\n```\n\n::: {.cell-output .cell-output-stderr}\n```\n\nAttaching package: 'dplyr'\n```\n:::\n\n::: {.cell-output .cell-output-stderr}\n```\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n```\n:::\n\n::: {.cell-output .cell-output-stderr}\n```\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n```\n:::\n\n```{.r .cell-code}\nlibrary(ggplot2)\ndata <- read.csv(\"student-mat.csv\")\n```\n:::\n\n\nI decided to find out the distribution of final grades in the dataset.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(data, aes(x = G3)) +\n  geom_bar(fill = \"steelblue\") +  \n  labs(title = \"Final Grade Distribution\",\n       x = \"Final Grades\",\n       y = \"Count\") +\n  theme_minimal()\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-2-1.png){width=672}\n:::\n:::\n\n\nFrom this, we can see that there are many students who got a grade of 10 or 11 out of 20.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nhigh_grade <- data %>%\n  filter(G3 >= 18)\n\n\n# Create the bar plot\nggplot(high_grade, aes(x = as.factor(Dalc))) +  # Convert Dalc to a factor\n  geom_bar(fill = \"steelblue\") +\n  labs(title = \"Alcohol Consumption Levels for Students with High Grades\",\n       x = \"Daily Alcohol Consumption Level\",\n       y = \"Count\") +\n  theme_minimal()\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-3-1.png){width=672}\n:::\n:::\n\n\nFrom this, we can see that most people who score high have a low or no level of alcohol consumption (level 1 in the bar plot). This means that students should restrict their alcohol consumption as it may hellp them get a higher final grade.\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

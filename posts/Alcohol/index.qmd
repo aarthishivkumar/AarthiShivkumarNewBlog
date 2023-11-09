@@ -1,0 +1,47 @@
+---
+title: "Alcohol Analysis"
+author: "Aarthi Shivkumar"
+date: "2023-11-08"
+categories: [alcohol, analysis]
+image: "image.jpg"
+---
+
+I chose to analyze an alcohol consumption dataset in underage secondary school students from Kaggle : https://www.kaggle.com/datasets/uciml/student-alcohol-consumption. This is as I find that underage drinking is becoming increasingly common and this is rather concerning, so I wanted to further analyze data relating to underage drinking.
+
+First, I imported the dataset:
+
+```{r}
+library(dplyr)
+library(ggplot2)
+data <- read.csv("student-mat.csv")
+```
+
+I decided to find out the distribution of final grades in the dataset.
+
+```{r}
+ggplot(data, aes(x = G3)) +
+  geom_bar(fill = "steelblue") +  
+  labs(title = "Final Grade Distribution",
+       x = "Final Grades",
+       y = "Count") +
+  theme_minimal()
+
+```
+
+From this, we can see that there are many students who got a grade of 10 or 11 out of 20.
+
+```{r}
+high_grade <- data %>%
+  filter(G3 >= 18)
+
+
+# Create the bar plot
+ggplot(high_grade, aes(x = as.factor(Dalc))) +  # Convert Dalc to a factor
+  geom_bar(fill = "steelblue") +
+  labs(title = "Alcohol Consumption Levels for Students with High Grades",
+       x = "Daily Alcohol Consumption Level",
+       y = "Count") +
+  theme_minimal()
+```
+
+From this, we can see that most people who score high have a low or no level of alcohol consumption (level 1 in the bar plot). This means that students should restrict their alcohol consumption as it may hellp them get a higher final grade.

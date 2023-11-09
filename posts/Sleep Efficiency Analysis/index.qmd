@@ -1,0 +1,80 @@
+---
+title: "Sleep quality analysis"
+author: "Aarthi Shivkumar"
+date: "2023-11-09"
+categories: [sleep, data science]
+image: "image.jpg"
+---
+
+In this exploration, we're going to take a closer look at the factors that influence sleep quality, such as the proportion of deep and REM sleep, as well as the percentage of light sleep. My personal challenges with maintaining consistent sleep patterns have led me to investigate this topic more deeply. For this analysis, I've selected a comprehensive dataset available on Kaggle, which provides valuable insights into sleep efficiency. You can access the dataset [here](https://www.kaggle.com/datasets/equilibriumm/sleep-efficiency) to follow along or conduct your own exploration: https://www.kaggle.com/datasets/equilibriumm/sleep-efficiency.
+
+First, let us import the dataset from Kaggle as such.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+sleep_data <- read.csv("Sleep_Efficiency.csv")
+```
+
+Next, we will find the summary of each variable. For instance, we can see that the mean sleep efficiency is -.7889, and the median is 0.8200, which is fairly high but can be further improved.
+
+```{r}
+summary(sleep_data)
+```
+
+Next, let us analyze the the gender representation in the dataset.
+
+```{r}
+sleep_data_summary <- sleep_data %>%
+  count(Gender) %>%
+  mutate(Percentage = n / sum(n) * 100)
+
+# Create the bar plot with the calculated percentages
+ggplot(sleep_data_summary, aes(x = Gender, y = Percentage, fill = Gender)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Gender Distribution as a Percentage",
+       x = "Gender",
+       y = "Percentage") +
+  theme_minimal()
+```
+
+From this bar plot above, we can see that males and females are almost equally represented in the dataset. This makes our findings relevant to both genders.
+
+Next, we want to analyze the relationship between REM sleep percentage and sleep efficiency. While deep sleep is crucial for physical restoration and strengthening the immune system, REM sleep is marked by active brain patterns and rapid eye movement despite the body's muscle relaxation. Therefore, I wanted to see which is associated more with sleep efficiency.
+
+```{r}
+lm_rem <- lm(Sleep.efficiency ~ REM.sleep.percentage, data = sleep_data)
+summary_rem <- summary(lm_rem) # Capture the model summary for later use
+
+# Plot REM Sleep vs. Sleep Efficiency with correlation line and R² value
+ggplot(sleep_data, aes(x = REM.sleep.percentage, y = Sleep.efficiency)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.1,
+           label = paste("R² = ", round(summary_rem$r.squared, 2)),
+           size = 5) +
+  labs(title = "REM Sleep vs. Sleep Efficiency",
+       x = "REM Sleep (%)",
+       y = "Sleep Efficiency (%)") +
+  theme_minimal()
+```
+
+```{r}
+lm_rem <- lm(Sleep.efficiency ~ Deep.sleep.percentage, data = sleep_data)
+summary_rem <- summary(lm_rem) # Capture the model summary for later use
+
+# Plot REM Sleep vs. Sleep Efficiency with correlation line and R² value
+ggplot(sleep_data, aes(x = Deep.sleep.percentage, y = Sleep.efficiency)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.1,
+           label = paste("R² = ", round(summary_rem$r.squared, 2)),
+           size = 5) +
+  labs(title = "Deep Sleep vs. Sleep Efficiency",
+       x = "Deep Sleep (%)",
+       y = "Sleep Efficiency (%)") +
+  theme_minimal()
+
+```
+
+From the R\^2 values and the scatter plots above, we can see that deep sleep has a much higher correlation with sleep efficiency. The higher correlation suggests that as deep sleep increases (or decreases), there is a stronger tendency for sleep efficiency to also increase (or decrease), and this relationship is more consistent for deep sleep than for REM sleep. This could mean that deep sleep might have a more direct or stronger impact on the overall quality of sleep (as measured by efficiency) than REM sleep does.
